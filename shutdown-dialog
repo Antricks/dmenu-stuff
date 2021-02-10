@@ -1,0 +1,12 @@
+#!/bin/bash
+
+choices="1 Abmelden\n2 Standby\n3 Neustart\n4 Herunterfahren\n5 Abbrechen"
+chosen=$(echo -e "$choices" | dmenu -i -l 20 -p "Aktion wählen:")
+
+case $chosen in
+	"1 Abmelden") kill -9 -1;;
+	"2 Standby") systemctl suspend;;
+	"3 Neustart") reboot;;
+	"4 Herunterfahren") shutdown -h now;;
+	"5 Abbrechen") exit;;
+esac

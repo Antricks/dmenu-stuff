@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+workdir="/home/moritz/Dokumente/Schule"
+
+dir=$(ls -F $workdir | grep / | tr -d / | dmenu -i -l 20 -p "Schulfach:")
+topic=$(echo | dmenu -p "Thema:")
+date=$(date +%Y-%m-%d)
+
+if [ -n "$topic" ]; then
+	file="$workdir/$dir/$date-$(echo $topic | tr " " _).md"
+else
+	file="$workdir/$dir/$date.md"
+fi
+
+if [ -n "$dir" ]; then
+	if [ -d "$workdir/$dir" ]; then
+		if [ ! -f "$file" ]; then
+			echo > $file 
+
+			if [ -n "$topic" ]; then
+				echo "# $topic " >> "$file" 	
+			fi
+			echo "$(date +%d.%m.%Y) - $dir" >> $file
+			echo "" >> $file
+			echo " --- " >> $file
+			echo "" >> "$file"
+		fi
+		typora "$file"
+	fi
+fi
+
+
